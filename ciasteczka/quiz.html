@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel = "stylesheet" href = "style.css">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+2&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+<body>
+    <div id = "header">
+        <h1>Sesje i ciasteczka w PHP</h1>
+        <div id = "navigation">
+            <a href = "ciasteczka.html">Ciasteczka</a>
+            <a href = "sesje.html">Sesje</a>
+            <a href = "quiz.html">Quiz</a>
+        </div>
+    </div>
+    <div id = "container">
+        <h3>Quiz</h3>
+        
+        <h4 id = "q1"> Jaką funkcją tworzymy ciasteczko?</h4>
+        <div class = "question">
+            <label><input type = "radio" name = "a1" value = "1"> setcookie() </label>
+            <label><input type = "radio" name = "a1"> createcookie() </label>
+            <label><input type = "radio" name = "a1"> newcookie() </label>
+        </div>
+
+        <h4 id = "q2">Co należy zrobić aby skasować ciasteczko?</h4>
+        <div class = "question">
+            <label><input type = "radio" name = "a2"> zjeść je </label>
+            <label><input type = "radio" name = "a2" value = "1"> wywołać funkcję setcookie() z jakąś przeszłą datą ważności </label>
+            <label><input type = "radio" name = "a2"> wywołać funkcję deletecookie() </label>
+        </div>
+
+        <h4 id = "q3">Jak inicjujemy sesję?</h4>
+        <div class = "question">
+            <label><input type = "radio" name = "a3"> set_session();</label>
+            <label><input type = "radio" name = "a3" value = "1"> session_start();</label>
+            <label><input type = "radio" name = "a3"> create_session(); </label>
+        </div>
+
+        <h4 id = "q4">Po czym aplikacje WWW identyfikują rekordy?</h4>
+        <div class = "question">
+            <label><input type = "radio" name = "a4"> po loginie</label>
+            <label><input type = "radio" name = "a4"> po obrazku</label>
+            <label><input type = "radio" name = "a4" value = "1"> po ID</label>
+        </div>
+
+        <h4 id = "q5">Kim jest użytkownik o ID = 0?</h4>
+        <div class = "question">
+            <label><input type = "radio" name = "a5" value = "1"> jest to anonimowy użytkownik</label>
+            <label><input type = "radio" name = "a5"> nie ma takiego użytkownika</label>
+            <label><input type = "radio" name = "a5"> jest to administrator</label>
+        </div>
+
+        <h4 id = "q6">Jak nazywamy ciasteczka bez określonego czasu wygaśnięcia?</h4>
+        <div class = "question">
+            <label><input type = "radio" name = "a6"> tymczasowe</label>
+            <label><input type = "radio" name = "a6"> jednorazowe</label>
+            <label><input type = "radio" name = "a6" value = "1"> sesyjne</label>
+        </div>
+
+            <input type = "button" value = "Wynik" onclick = "check();">
+            <p id = "w"></p>
+    </div>
+    <div id = "footer">Stronę wykonał: Mateusz Michno 4i2-22</div>
+
+    <div id = "back">
+        <a href = "#header"><i class="fa fa-arrow-circle-up"></i></a>
+    </div>
+</body>
+    <script>
+        let w = document.getElementById("w");
+
+        let a1 = document.getElementsByName("a1");
+        let a2 = document.getElementsByName("a2");
+        let a3 = document.getElementsByName("a3");
+        let a4 = document.getElementsByName("a4");
+        let a5 = document.getElementsByName("a5");
+        let a6 = document.getElementsByName("a6");
+
+        let q1 = document.getElementById("q1");
+        let q2 = document.getElementById("q2");
+        let q3 = document.getElementById("q3");
+        let q4 = document.getElementById("q4");
+        let q5 = document.getElementById("q5");
+        let q6 = document.getElementById("q6");
+
+        let suma = 0;
+
+        function check(){
+            
+                if(a1[0].checked){
+                    suma += 1;
+                    q1.className = "correct";
+                    }
+                else
+                    q1.className = "false";
+                
+                if(a2[1].checked){
+                    suma += 1;
+                    q2.className = "correct";
+                    }
+                else
+                    q2.className = "false";
+
+                if(a3[1].checked){
+                    suma += 1;
+                    q3.className = "correct";
+                    }
+                else
+                    q3.className = "false";
+
+                if(a4[2].checked){
+                    suma += 1;
+                    q4.className = "correct";
+                    }
+                else
+                    q4.className = "false";
+
+                if(a5[0].checked){
+                    suma += 1;
+                    q5.className = "correct";
+                    }
+                else
+                    q5.className = "false";
+
+                if(a6[2].checked){
+                    suma += 1;
+                    q6.className = "correct";
+                    }
+                else
+                    q6.className = "false";    
+                                         
+            w.innerHTML = `Twój wynik to: <b>${Math.round((suma/6)*100)}%</b>`;
+
+            suma = 0;    
+            }
+    </script>
+
+    <script src = "backToTop.js"></script>
+</html>

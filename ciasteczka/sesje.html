@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel = "stylesheet" href = "style.css">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+2&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id = "header">
+        <h1>Sesje i ciasteczka w PHP</h1>
+        <div id = "navigation">
+            <a href = "ciasteczka.html">Ciasteczka</a>
+            <a href = "sesje.html">Sesje</a>
+            <a href = "quiz.html">Quiz</a>
+        </div>
+    </div>
+    <div id = "container">
+        <h3>Sesje</h3>
+
+        <h4>Czym są?</h4>
+        <p>Kontrola sesji udostępnia możliwość śledzenia poczynań odwiedzającego, podczas pojedynczej wizyty na naszej stronie. Innymi słowy, umożliwia rozpoznanie, czy użytkownik dopiero co wszedł na stronę, czy przechodzi z innej podstrony serwisu. Dodatkowo, możemy tworzyć i usuwać zmienne, których istnienie jest ściśle powiązane z pojedynczą sesją (wizytą). Ich żywot kończy się wraz z zamknięciem okna przeglądarki lub przejścia na inną stronę.</p>
+
+        <h4>Rozpoczynanie sesji</h4>
+        <p>Aby zainicjować mechanizm sesji, wystarczy wywołać funkcję session_start(), najlepiej na początku naszej aplikacji. Od tego momentu do naszej dyspozycji zostaje oddana superglobalna tablica $_SESSION - wszystkie zapisane do niej dane są przesyłane między kolejnymi żądaniami. Popatrzmy na pierwszy, bardzo prosty przykład licznika odwiedzonych już podstron:</p>
+
+        <div class = "code">
+            <code>
+                &lt;?php <br>
+
+                session_start(); // Inicjalizujemy sesje <br>
+	
+	            if(!isset($_SESSION['licznik'])) // Jeżeli jest to pierwsza wizyta, tablica z sesjami nie zawiera żadnych danych. <br>
+	            { <br>
+		            &nbsp;$_SESSION['licznik'] = 0; <br>
+	            } <br>
+	
+	            $_SESSION['licznik']++; // Zmieniamy dane sesji <br>
+	
+	            echo 'Odwiedziłeś już '.$_SESSION['licznik'].' podstron!'; // Odczytujemy dane sesji <br>
+
+                ?&gt;
+            </code>
+        </div>
+
+        <h4>Autoryzacja użytkowników</h4>
+        <p>Aplikacje WWW nie identyfikują rekordów jakimiś abstrakcyjnymi rzeczami typu login lub tytuł. Operują na zwyczajnych, automatycznie nadawanych i unikalnych liczbach zwanych identyfikatorami (w skrócie pisze się "id"). Dzięki temu można szybko je do siebie porównać, co ma szczególne znaczenie w przypadku ogromnej liczby rekordów. Takie też ID przypisane użytkownikom przesyłane są w sesjach. Oczywiście, zgodnie z praktyką stosowaną w bazach danych, numerację rekordów rozpoczynamy od 1. Rekord o ID równym 0 nie istnieje.</p>
+        
+        <p>Zatem, jak taki system logowania działa? Kiedy sesja jest już załadowana, skrypt sprawdza zapisany w niej ID użytkownika. Jeżeli jest on większy od zera, ktoś jest już zalogowany i wystarczy tylko pobrać skądś dane jego profilu. W przypadku ID równego 0 mamy do czynienia z kimś anonimowym. Tu, w zależności od sytuacji możemy mu wyświetlać ogólnodostępne treści albo formularz logowania.</p>
+
+        <p> Zainicjujemy sesję i obsłużymy sytuację pierwszej wizyty - w takim wypadku gościa oznaczymy jako osobę anonimową (niezalogowaną):</p>
+
+        <div class = "code">
+            <code>
+
+                session_start(); <br>
+	
+	            if(!isset($_SESSION['uzytkownik'])) <br>
+	            { <br>
+		            &nbsp;// Sesja się zaczyna, wiec inicjujemy użytkownika anonimowego <br>
+		            &nbsp;$_SESSION['uzytkownik'] = 0; <br>
+                } <br>
+                
+            </code>
+        </div>
+
+        <p>ID większy od 0? Ktoś jest zalogowany:</p>
+
+        <div class = "code">
+            <code>
+
+                if($_SESSION['uzytkownik'] > 0) <br>
+                { <br>
+                    &nbsp;// Ktos jest zalogowany <br>
+                    &nbsp;echo 'Witaj, '.$uzytkownicy[$_SESSION['uzytkownik']]['login'].' na naszej stronie!';	 <br>
+                } <br>
+                else <br>
+                { <br>
+    
+            </code>
+        </div>
+
+        <p>Jednak jeśli nie jest, to musimy zaprogramować zarówno pokazywanie formularza logowania, jak i autoryzację użytkownika na podstawie danych z niego. Zaczynamy od tej drugiej opcji. Korzystając z funkcji czyIstnieje() pobieramy ID użytkownika. Jeżeli jest on różny od false, wpisujemy go do sesji, tym samym logując go.</p>
+
+        <div class = "code">
+            <code>
+
+                // Niezalogowany<br>
+            if($_SERVER['REQUEST_METHOD'] == 'POST')<br>
+            {<br>
+                if(($id = czyIstnieje($_POST['login'], $_POST['haslo'])) !== false)<br>
+                {<br>
+                    &nbsp;// Logujemy uzytkownika, wpisal poprawne dane<br>
+                    &nbsp;$_SESSION['uzytkownik'] = $id;<br>
+                    &nbsp;echo 'Dziekujemy, zostales zalogowany! &lt;a href="sesje_2.php">Dalej&lt;/a>'; <br>
+                }<br>
+                else<br>
+                {<br>
+                    &nbsp;echo 'Podales nieprawidlowe dane, zegnaj! &lt;a href="sesje_2.php">Dalej&lt;/a>';<br>
+                }		<br>
+            }<br>
+            else<br>
+            {<br>
+                
+            </code>
+        </div>
+
+        <p>Kiedy dane nie nadeszły z formularza, znaczy to, że trzeba go wyświetlić:</p>
+
+        <div class = "code">
+            <code>
+
+                echo '&lt;form method="post" action="sesje_2.php"> <br>
+                    Zaloguj sie: &lt;input type="text" name="login"/> <br>
+                    &lt;input type="password" name="haslo"/> <br>
+                    &lt;input type="submit" value="OK"/>&lt;/form>';	 <br>	
+            }	 <br>
+        }
+    
+            </code>
+        </div>
+
+    </div>
+
+    <div id = "footer">Stronę wykonał: Mateusz Michno 4i2-22</div>
+
+    <div id = "back">
+        <a href = "#header"><i class="fa fa-arrow-circle-up"></i></a>
+    </div>
+
+</body>
+    <script src = "backToTop.js"></script>
+</html>

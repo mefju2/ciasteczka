@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel = "stylesheet" href = "style.css">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+2&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id = "header">
+        <h1>Sesje i ciasteczka w PHP</h1>
+        <div id = "navigation">
+            <a href = "ciasteczka.html">Ciasteczka</a>
+            <a href = "sesje.html">Sesje</a>
+            <a href = "quiz.html">Quiz</a>
+        </div>
+    </div>
+    <div id = "container">
+        <h3>Ciasteczka</h3>
+        <h4>Czym są</h4>
+        <p>Ciasteczka (eng. cookies) mały fragment tekstu, który serwis internetowy wysyła do przeglądarki i który przeglądarka wysyła z powrotem przy następnych wejściach na witrynę. Używane jest głównie do utrzymywania sesji np. poprzez wygenerowanie i odesłanie tymczasowego identyfikatora po logowaniu. Może być jednak wykorzystywane szerzej poprzez zapamiętanie dowolnych danych, które można zakodować jako ciąg znaków. Dzięki temu użytkownik nie musi wpisywać tych samych informacji za każdym razem, gdy powróci na tę stronę lub przejdzie z jednej strony na inną.
+        </p>
+
+            <h4>Zastosowanie</h4>
+            <p>Cookie różnych rodzajów są stosowane najczęściej po logowaniu do utrzymywania sesji. Mogą jednak przechowywać inne tymczasowe dane jak stan elementów na stronie, czy historię odwiedzanych poprzednio stron (na danej witrynie). Umożliwia to tworzenie spersonalizowanych serwisów WWW (np. zapamiętanie stanu menu), obsługi logowania, prostych sond i liczników, „koszyków zakupowych” w internetowych sklepach, a także tworzenie statystyk użyteczności witryny oraz badanie preferencji użytkowników.<br><br>
+
+            Zastosowanie cookies do sond i liczników internetowych może wyglądać następująco – serwer ustawia ciasteczko informujące, że z danego komputera oddano już głos lub też odwiedzono daną stronę. Na tej podstawie może wykonać odpowiednie operacje i wygenerować dla użytkownika zindywidualizowaną treść strony. Schematyczny sposób wykorzystywania ciasteczek przy obsłudze licznika internetowego, wykluczającego przeładowania (zwiększanie liczby odwiedzin przy odświeżeniu strony) przedstawiony jest poniżej:
+            </p>
+
+                <div id = "images">
+                    <img src = "pierwsze.png">
+                    <img src = "kolejne.png">
+                </div>
+
+                <h4>Sposób działania</h4>
+                <p>Mechanizm cookie został wprowadzony po to, by w bezstanowym protokole HTTP umożliwić odróżnienie osób odwiedzających dany serwis. Cookies są informacjami zapisywanymi tymczasowo na żądanie serwera lub skryptu po stronie przeglądarki użytkownika. Sam sposób zapisu danych nie jest sformalizowany i – wbrew popularnej nazwie „plik cookie” – pojedyncze ciasteczko nie jest zapisywane w jednym pliku na dysku. Dla przykładu Internet Explorer przechowuje wszystkie ciasteczka z danej witryny w jednym pliku, ale już Firefox i Chrome przechowują ją w bazie danych SQLite.<br><br>
+
+                Standaryzowany jest jednak sposób przesyłania ciasteczek. Serwer WWW chcąc wysłać żądanie utworzenia ciasteczka na dysku użytkownika dołącza do nagłówka HTTP polecenie „Set-Cookie”, po którym następuje ciąg przekazywanych danych i opcji. Zapamiętane ciasteczko jest wysyłane jedynie do serwera z którego pochodzi, a który jest rozpoznawany przez przeglądarkę według nazwy domeny.<br><br>
+                    
+                W danych po poleceniu Set-Cookie określone są: 
+                </p>
+                <ul>
+                    <li>nazwa i przypisana jej wartość (jedyne obowiązkowe),</li>
+                    <li>czas ważności danego ciasteczka (po jego upłynięciu przeglądarka przestanie je wysyłać i powinna je usunąć z komputera użytkownika),</li>
+                    <li>opcje ograniczenia widoczności ciasteczka (domena, ścieżka i poziom zabezpieczeń).</li>
+                </ul>
+                <p>
+                    Do zapisania cookie wymagana jest jedynie jego nazwa i wartość. Niepodanie czasu ważności spowoduje wygaśnięcie ciasteczka po zamknięciu „sesji” (czyli zamknięciu przeglądarki). Ciasteczka, które wygasają po zakończonej sesji, zwane są ciasteczkami sesyjnymi. Pozostałe są „trwałe” w tym sensie, że po ponownym uruchomieniu przeglądarki są dalej dostępne. Nie ma jednak możliwości by ciasteczko nie wygasło nigdy – albo wygasają z sesją, albo wraz z przekroczeniem podanego czasu. Czas ważności może być jednak bardzo odległy – nawet kilkuletni. Ciasteczka nie są też w pełni trwałe dlatego, że użytkownik może je łatwo usunąć
+                </p>
+
+                <h4>Tworzenie ciastka w PHP</h4>
+                
+                <div class = "code">
+                    
+                <code>
+                    &lt;?php <br>
+                        setcookie('wizyta', time(), time() + 30 * 86400); <br>
+                        if(!isset($_COOKIE['wizyta'])) <br>
+                        { <br>
+                            &nbsp;echo 'Witaj, gościu.'; <br>
+                        } <br>
+                        else <br>
+                        { <br>
+                            &nbsp;echo 'Witaj, ostatni raz odwiedziłeś nas '.date('d.m.Y, H:i', $_COOKIE['wizyta']); <br>	
+                        } <br>
+                    
+                    ?&gt;
+                </code>
+
+            </div>
+                <p>Trzy pierwsze parametry setcookie() są najważniejsze (ma ona ich trochę więcej). Jest to kolejno: nazwa ciastka, jego wartość oraz data ważności w sekundach od 1.1.1970. Data, a nie okres ważności, stąd przy jego ustawianiu przydaje się funkcja time(). W powyższym skrypcie sprawdzamy, czy ustawialiśmy już ciastko dla danego internauty. Jeśli nie, tworzymy je i wyświetlamy komunikat powitania. W przeciwnym wypadku także aktualizujemy wartość, ale też wyświetlamy datę ostatniej wizyty odczytaną właśnie z ciastka.</p>
+
+                <h4>Usuwanie ciastka</h4>
+
+                <div class = "code">
+                    <code>
+                        &lt;?php <br>
+ 
+                        &nbsp;setcookie('wizyta', '', 0); <br>
+ 
+                        ?&gt;
+                    </code>
+                </div>
+
+                <p>Aby istniejące ciastko skasować, wywołujemy funkcję setcookie() z jakąś przeszłą datą ważności</p>
+
+                <h4>Dyrektywa UE - obowiązek informacyjny</h4>
+                <p>W związku z europejskimi wytycznymi w 2013 roku znowelizowana została ustawa Prawo Telekomunikacyjne, która swoim art. 173 nakłada obowiązek informowania o przechowywaniu i wykorzystywaniu ciasteczek. Za nieprzestrzeganie tych zasad grozi kara finansowa, która może być nałożona przez prezesa Urzędu Komunikacji Elektronicznej.</p>
+    </div>
+    <div id = "footer">Stronę wykonał: Mateusz Michno 4i2-22</div>
+
+    <div id = "back">
+        <a href = "#header"><i class="fa fa-arrow-circle-up"></i></a>
+    </div>
+</body>
+    <script src = "backToTop.js"></script>
+</html>
